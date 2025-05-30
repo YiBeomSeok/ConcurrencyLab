@@ -8,12 +8,6 @@ import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
-// p3의 작업 시간이 전체 작업 시간에 영향을 끼치고 있다.
-// 이번에는 총 작업 시간이 30초 이하인 동안에만 프로세싱을 한다.
-// p3의 작업 시간이 44ms인 경우
-// 900장을 원하지만 677장이 처리되었다.
-// p3의 작업 시간이 31ms인 경우
-// 900장을 원하지만 927장이 처리되었다.
 class Pipeline3 {
     suspend fun p1(frame: Frame): Frame {
         delay(10) // 10ms 작업 시간
@@ -82,7 +76,6 @@ fun main() = runBlocking {
                 .toList()
         }
             .onFailure { e ->
-                println("에러 발생. 처음부터 다시 시도합니다. 에러: ${e.message}")
                 currentProcessingSecond.update { 0 }
             }
             .getOrNull()
@@ -90,7 +83,7 @@ fun main() = runBlocking {
         if (result != null) {
             val processEnd = System.currentTimeMillis()
             println("Processing Time : ${(processEnd - processStart)} ms")
-            println("모든 프레임 처리 완료! 총 프레임: ${result.size}")
+            println("총 프레임: ${result.size}")
             break // 성공적으로 처리했으므로 반복 종료
         }
     }

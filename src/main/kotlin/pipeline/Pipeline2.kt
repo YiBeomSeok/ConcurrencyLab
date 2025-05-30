@@ -38,7 +38,7 @@ class Pipeline2 {
 fun main() = runBlocking {
     val alarm = launch {
         var sec = 1
-        while(isActive) {
+        while (isActive) {
             delay(1000)
             println(sec++)
         }
@@ -46,10 +46,8 @@ fun main() = runBlocking {
 
     val pipeline = Pipeline2()
 
-    // 30fps * 30초
     val bufferSize = 30 * 30
 
-    // frames Flow 정의
     val frames = flow {
         var id = 0
         while (true) {
@@ -58,7 +56,7 @@ fun main() = runBlocking {
         }
     }
 
-    while(true) {
+    while (true) {
         val processStart = System.currentTimeMillis()
 
         val result = runCatching {
@@ -69,8 +67,8 @@ fun main() = runBlocking {
                 .map { pipeline.p2(it) }
                 .buffer(bufferSize)
                 .map { pipeline.p3(it) }
-                .take(bufferSize)       // 900장 처리
-                .toList()               // 최종 컬렉션으로 방출
+                .take(bufferSize)
+                .toList()
         }
 
         val processEnd = System.currentTimeMillis()
@@ -81,7 +79,6 @@ fun main() = runBlocking {
             break // 성공적으로 처리했으므로 반복 종료
         } else {
             println("에러 발생. 처음부터 다시 시도합니다. 에러: ${result.exceptionOrNull()?.message}")
-            // 필요하면 delay(...) 등으로 재시작 간격 둠
         }
     }
 

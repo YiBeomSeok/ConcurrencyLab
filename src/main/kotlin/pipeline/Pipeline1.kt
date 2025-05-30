@@ -9,17 +9,17 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class Pipeline1 {
     suspend fun p1(frame: Frame): Frame {
-        delay(10)               // 10ms 작업 시간
+        delay(10)
         return frame
     }
 
     suspend fun p2(frame: Frame): Frame {
-        delay(20)               // 20ms 작업 시간
+        delay(20)
         return frame
     }
 
     suspend fun p3(frame: Frame): Frame {
-        delay(30)               // 30ms 작업 시간
+        delay(30)
         return frame
     }
 }
@@ -36,13 +36,13 @@ fun main() = runBlocking {
     val frames = flow {
         var id = 0
         while (true) {
-            delay(30)                       // 30fps 시뮬레이션
+            delay(30)
             emit(Frame(id = ++id, "data"))
         }
     }
-    val recordingTime = 30                           // 30초 동안 얻은 데이터가 필요함
-    val fps = 30                                     // 30 fps를 기대 해야함
-    val bufferSize = recordingTime * fps             // 900
+    val recordingTime = 30
+    val fps = 30
+    val bufferSize = recordingTime * fps
 
     val processStart = System.currentTimeMillis()
 
